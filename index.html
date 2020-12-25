@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body {
+            width: 1000px;
+            /* border: 1px solid brown; */
+            margin: 50px auto;
+
+        }
+
+        #picHere {
+            display: flex;
+            justify-content: space-between;
+            /* align-items: center; */
+        }
+
+        #bigPic {
+            margin-top: 15px;
+        }
+
+        #bigPic h3 {
+            font-size: 18pt;
+            text-align: center;
+            color: #333;
+        }
+
+        img {
+            cursor: pointer
+        }
+    </style>
+
+</head>
+
+<body onload="drawPic()">
+
+    <section id="picHere">
+    </section>
+    <section id="bigPic"></section>
+
+    <script>
+        let gallery = [
+            {
+                fname: ['red.jpg', 'red1.jpg', 'red2.jpg'],
+                sw: '300',
+                deskr: 'Красный костел',
+                link: 'https://msj.by/katolicheskie-xramy/krasnyj-kostel-v-minske/',
+                title: 'В храме святого Симеона и святой Елены находится полномасштабная копия Туринской Плащаницы'
+            },
+            {
+                fname: ['troi.jpg', 'troi1.jpg', 'troi2.jpg'],
+                sw: '300',
+                deskr: 'Троицкое',
+                link: 'https://www.belarus.by/ru/travel/belarus-life/trinity-suburb',
+                title: 'Троицкое предместье — исторический район города Минска, расположенный в северо-восточной части исторического центра на левом берегу реки Свислочь.'
+            },
+            {
+                fname: ['mir.jpg', 'mir1.jpg', 'mir2.jpg'],
+                sw: '300',
+                deskr: 'Мирский замок',
+                link: 'https://mirzamak.by/',
+                title: 'Построенный в начале XVI в. магнатом Ю. И. Ильиничем замок стал первым частнособственническим замком на землях Беларуси'
+            }
+        ];
+
+        function drawPic() {
+            let s = '';
+            for (i = 0; i < gallery.length; i++) {
+                s += `
+                <div id="id${i}">
+                    <img onclick="showPic('${gallery[i].fname[0]}','${gallery[i].title}')" 
+                        onmouseover="timerId=setTimeout('roll(${i})',1000)" onmouseout="clearTimeout(timerId)" 
+                        src="images/${gallery[i].fname[0]}" style="width: ${gallery[i].sw}px">
+                    <p>
+                        <a href="${gallery[i].link}"> ${gallery[i].deskr}</a>
+                    </p>
+                </div> 
+                `;
+            }
+            picHere.innerHTML = s;
+        }
+
+        function showPic(p, t) {
+            bigPic.innerHTML = `
+                <div>
+                    <img src="images/${p}" onclick="bigPic.innerHTML = '' " style="width:1000px" >
+                    <h3>${t}</h3>
+                </div>
+            `;
+        }
+        let p = 2;
+        let k = 0;
+        function roll(n) {
+
+            if (++k > p) {
+                k = 0;
+            }
+
+            mid = document.getElementById(`id${n}`);
+            mid.innerHTML = `
+                <div>
+                    <img src="images/${gallery[n].fname[k]}" style="width: ${gallery[n].sw}px"
+                        onmouseout="stop()" onclick="showPic('images/${gallery[n].fname[k]}','${gallery[n].title}')"
+                        onmouseover="roll()">
+                    <p>
+                        <a href="${gallery[n].link}">${gallery[n].deskr}</a>
+                    </p>    
+                </div>
+                `;
+            timerId = setTimeout(`roll(${n})`, 2000);
+
+        };
+
+        function stop() {
+            clearTimeout(timerId);
+            drawPic();
+        }
+
+
+
+
+    </script>
+</body>
+
+</html>
